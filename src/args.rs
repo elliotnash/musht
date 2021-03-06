@@ -28,21 +28,36 @@ impl Default for MushtArgs {
     }
 }
 
-pub fn parse(args: &Vec<String>) -> MushtArgs {
+pub fn parse(mut args: Vec<String>) -> MushtArgs {
     // give a little wiggle room for expanding vec without relocation
     let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
 
     // get vec of args parsed with spaces, not equal signs
     for i in 1..args.len() {
+
+        //skip if null arg
+        if args[i] == "" {continue;}
+
         let full_arg = (*args[i]).to_string().to_lowercase();
-        let option: Vec<&str> = full_arg.splitn(2, "=").collect();
+        //make an option be split at space or equals
+        let mut option: Vec<&str> = full_arg.splitn(2, "=").collect();
+        let mut next_arg = String::new();
+        if option.len() == 1 && i+1 < args.len() {
+            next_arg = args[i+1].clone();
+            option.push(&next_arg);
+            //null arg
+            args[i+1] = String::new();
+        }
+        dbg!(&option);
+        let mut add_option = true;
         for arg in &option {
 
             match *arg {
                 "-p" | "--p" | "-port" | "--port" => {
-                    if i+2 < args.len() {
+                    if option.len() == 2 {
                         musht_args.mosh_port = option[1].to_string();
-                    } else if i+2 < args.len() {
+                        add_option = false;
+                    } else if i+1 < args.len() {
                         musht_args.mosh_port = (*args[i+1]).to_string();
                     }
                 },
@@ -50,11 +65,12 @@ pub fn parse(args: &Vec<String>) -> MushtArgs {
                     let ssh_args = parse_ssh_args(option[1]);
                     musht_args.ssh_args = ssh_args.0;
                     if ssh_args.1 != "" {musht_args.ssh_port = ssh_args.1;}
+                    add_option = false;
                 }
                 _ => {}
             }
 
-            musht_args.args.push((*arg).to_string());
+            if add_option {musht_args.args.push((*arg).to_string())};
         }
     }
 
@@ -77,5 +93,5 @@ fn parse_ssh_args(ssh_args: &str) -> (String, String){
             args[i] = "";
         }
     }
-    (args.join(" "), port.to_string())
+    (args.into_iter().filter(|x| *x != "").collect::<Vec<&str>>().join(" "), port.to_string())
 }

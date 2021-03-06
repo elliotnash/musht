@@ -10,7 +10,7 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    let args = args::parse(&args);
+    let args = args::parse(args);
     dbg!(args);
 
     // build mosh command with args
