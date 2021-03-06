@@ -30,7 +30,11 @@ impl Default for MushtArgs {
 
 impl MushtArgs {
     pub fn get_ssh_args(self: &Self) -> String {
-        format!("{} -p {}", self.ssh_args, self.ssh_port)
+        if self.ssh_port == "" {
+            self.ssh_args.clone()
+        } else {
+            format!("{} -p {}", self.ssh_args, self.ssh_port)
+        }
     }
     pub fn get_user_host(self: &Self) -> String {
         format!("{}@{}", self.user, self.host)

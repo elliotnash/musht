@@ -17,9 +17,9 @@ fn main() {
     for i in 0..args.args.len() {
         command.arg(&args.args[i]);
     }
-    command.arg("--ssh").arg(args.get_ssh_args())
-        .arg("-p").arg(&args.mosh_port)
-        .arg(args.get_user_host());
+    command.arg("--ssh").arg(args.get_ssh_args());
+    if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
+    command.arg(args.get_user_host());
 
     dbg!(&command);
 
