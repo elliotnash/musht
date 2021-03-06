@@ -8,7 +8,7 @@ pub struct MushtArgs {
 }
 
 impl Default for MushtArgs {
-    fn default() -> MushtArgs {
+    fn default() -> Self {
         MushtArgs {
             mosh_port: String::new(),
             ssh_port: "22".to_string(),
@@ -21,18 +21,22 @@ impl Default for MushtArgs {
 
 pub fn parse(args: &Vec<String>) -> Vec<String> {
     // give a little wiggle room for expanding vec without relocation
-    let mut parsed_args: Vec<String> = Vec::with_capacity(args.len()+2);
+    let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
 
     // get vec of args parsed with spaces, not equal signs
     for i in 1..args.len() {
-        let option = (*args[i]).split("=");
+        let option = (*args[i]).splitn(2, "=");
         for arg in option {
-            parsed_args.push((*arg).to_string());
+
+            match arg {
+                "-p" | "--port" => {}
+                _ => {}
+            }
+
+            musht_args.args.push((*arg).to_string());
         }
     }
 
-    // 
-
-    parsed_args
+    musht_args.args
 
 }
