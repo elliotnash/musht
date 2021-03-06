@@ -37,7 +37,11 @@ impl MushtArgs {
         }
     }
     pub fn get_user_host(self: &Self) -> String {
-        format!("{}@{}", self.user, self.host)
+        if self.user == "" {
+            self.host.clone()
+        } else {
+            format!("{}@{}", self.user, self.host)
+        }
     }
 }
 
@@ -46,6 +50,7 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
     let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
 
     // get vec of args parsed with spaces, not equal signs
+    dbg!(&args);
     for i in 1..args.len() {
 
         //skip if null arg
@@ -82,8 +87,11 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
                     add_option = false;
                 }
                 _ => {
-                    if arg.contains("@"){
-                        let userhost: Vec<&str> = arg.splitn(2, "@").collect();
+                    if add_option && i>=1 && !args[i].starts_with("-") && 
+                    (!args[i-1].starts_with("-") || args[i-1].contains("=")) {
+                        println!("args[{}] met qualification", i);
+                        let mut userhost: Vec<&str> = arg.splitn(2, "@").collect();
+                        if userhost.len() == 1 {userhost.insert(0, "");}
                         let hostport: Vec<&str> = userhost[1].splitn(2, ":").collect();
                         musht_args.user = userhost[0].to_string();
                         musht_args.host = hostport[0].to_string();

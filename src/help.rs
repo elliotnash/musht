@@ -1,8 +1,3 @@
-
-pub fn print_unkown(option: &str){
-    println!("Unkown option: {}", option);
-}
-
 pub fn print_help(){
     println!(r#"Usage: musht [options] [--] [user@]host [command...]
     --client=PATH        mosh client on local machine

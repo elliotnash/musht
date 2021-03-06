@@ -14,19 +14,19 @@ fn main() {
 
     // build mosh command with args
     let mut command = Command::new("mosh");
-    for i in 0..args.args.len() {
-        command.arg(&args.args[i]);
-    }
+    command.args(&args.args);
+    
     command.arg("--ssh").arg(args.get_ssh_args());
     if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
     command.arg(args.get_user_host());
 
+    dbg!(&args);
     dbg!(&command);
 
     // spawn mosh blocking
-    println!("[starting mosh.]");
-    if command.status().is_err(){
-        println!("failed to start mosh, is it installed?")
-    }
+    // println!("[starting mosh.]");
+    // if command.status().is_err(){
+    //     println!("failed to start mosh, is it installed?")
+    // }
 
 }
