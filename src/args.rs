@@ -1,4 +1,11 @@
+use lazy_static::lazy_static;
+use regex::Regex;
 
+lazy_static! {
+    static ref ARG_REGEX: Regex = Regex::new(r#"[^\s"']+|"([^"]*)"|'([^']*)'"#).unwrap();
+}
+
+#[derive(Debug)]
 pub struct MushtArgs {
     pub mosh_port: String,
     pub ssh_port: String,
@@ -21,7 +28,7 @@ impl Default for MushtArgs {
     }
 }
 
-pub fn parse(args: &Vec<String>) -> Vec<String> {
+pub fn parse(args: &Vec<String>) -> MushtArgs {
     // give a little wiggle room for expanding vec without relocation
     let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
 
@@ -40,7 +47,9 @@ pub fn parse(args: &Vec<String>) -> Vec<String> {
                     }
                 },
                 "-ssh" | "--ssh" => {
-                    parse_ssh_args(&mut musht_args, option[1])
+                    let ssh_args = parse_ssh_args(option[1]);
+                    musht_args.ssh_args = ssh_args.0;
+                    if ssh_args.1 != "" {musht_args.ssh_port = ssh_args.1;}
                 }
                 _ => {}
             }
@@ -49,10 +58,24 @@ pub fn parse(args: &Vec<String>) -> Vec<String> {
         }
     }
 
-    musht_args.args
+    musht_args
 
 }
 
-fn parse_ssh_args(musht_args: &mut MushtArgs, ssh_args: &str){
-    
+fn parse_ssh_args(ssh_args: &str) -> (String, String){
+    let mut args: Vec<&str> = ARG_REGEX.find_iter(ssh_args).map(|x| x.as_str()).collect();
+
+    let mut port = "";
+    for i in 0..args.len() {
+        if args[i].contains("-p") {
+            port = &args[i][2..];
+            if port == "" && i+1 < args.len() {
+                port = args[i+1];
+                args[i+1] = "";
+            }
+            //now efectively remove from args
+            args[i] = "";
+        }
+    }
+    (args.join(" "), port.to_string())
 }
