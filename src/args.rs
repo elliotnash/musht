@@ -20,11 +20,20 @@ impl Default for MushtArgs {
         MushtArgs {
             mosh_port: String::new(),
             ssh_port: String::new(),
-            ssh_args: String::new(),
+            ssh_args: "ssh".to_string(),
             user: String::new(),
             host: String::new(),
             args: Vec::new()
         }
+    }
+}
+
+impl MushtArgs {
+    pub fn get_ssh_args(self: &Self) -> String {
+        format!("{} -p {}", self.ssh_args, self.ssh_port)
+    }
+    pub fn get_user_host(self: &Self) -> String {
+        format!("{}@{}", self.user, self.host)
     }
 }
 
@@ -50,7 +59,6 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
             //null arg
             args[i+1] = String::new();
         }
-        dbg!(&option);
         let mut add_option = true;
         for arg in &option {
 
