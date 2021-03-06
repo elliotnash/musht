@@ -4,7 +4,7 @@ pub fn print_unkown(option: &str){
 }
 
 pub fn print_help(){
-    println!(r#"Usage: /usr/bin/mosh [options] [--] [user@]host [command...]
+    println!(r#"Usage: musht [options] [--] [user@]host [command...]
     --client=PATH        mosh client on local machine
                             (default: "mosh-client")
     --server=COMMAND     mosh server on remote machine

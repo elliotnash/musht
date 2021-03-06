@@ -1,16 +1,27 @@
 mod help;
+mod args;
 
+use std::env;
 use std::process::Command;
 
 fn main() {
-    //help::print_unkown("hi");
-    //help::print_help();
 
-    let output = Command::new("echo")
-        .arg("Hello world")
-        .output()
-        .expect("Failed to execute command");
+    println!("[starting musht.]");
 
-    assert_eq!(b"Hello world\n", output.stdout.as_slice());
+    let args: Vec<String> = env::args().collect();
+
+    let args = args::parse(&args);
+
+    // build mosh command with args
+    let mut command = Command::new("mosh");
+    for i in 0..args.len() {
+        command.arg(&args[i]);
+    }
+
+    //spawn mosh blocking
+    println!("[starting mosh.]");
+    if command.status().is_err(){
+        println!("failed to start mosh, is it installed?")
+    }
 
 }
