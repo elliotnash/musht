@@ -23,13 +23,12 @@ fn main() {
     if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
     command.arg(args.get_user_host());
 
-    dbg!(&args);
-    dbg!(&command);
+    //dbg!(&command);
 
     // spawn mosh blocking
     println!("[starting mosh.]");
     if command.status().is_err(){
-        println!("failed to start mosh, is it installed?")
+        println!("failed to start mosh, is it installed?");
     }
 
 }

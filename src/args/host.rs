@@ -13,9 +13,10 @@ impl MushtArgs {
             Ok(srv) => {
                 let response = srv.iter().next().unwrap();
                 self.host = response.target().to_string();
+                //only want to change ports if theyre empty to allow manually specifying ports
                 let port = response.port().to_string();
-                self.mosh_port = port.clone();
-                self.ssh_port = port;
+                if self.mosh_port == "" {self.mosh_port = port.clone();}
+                if self.ssh_port == "" {self.ssh_port = port;}
             },
             Err(_) => {}
         }

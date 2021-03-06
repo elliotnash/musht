@@ -51,7 +51,6 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
     let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
 
     // get vec of args parsed with spaces, not equal signs
-    dbg!(&args);
     for i in 1..args.len() {
 
         //skip if null arg
@@ -90,7 +89,6 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
                 _ => {
                     if add_option && i>=1 && !args[i].starts_with("-") && 
                     (!args[i-1].starts_with("-") || args[i-1].contains("=")) {
-                        println!("args[{}] met qualification", i);
                         let mut userhost: Vec<&str> = arg.splitn(2, "@").collect();
                         if userhost.len() == 1 {userhost.insert(0, "");}
                         let hostport: Vec<&str> = userhost[1].splitn(2, ":").collect();
