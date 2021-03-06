@@ -19,7 +19,7 @@ impl Default for MushtArgs {
     fn default() -> Self {
         MushtArgs {
             mosh_port: String::new(),
-            ssh_port: "22".to_string(),
+            ssh_port: String::new(),
             ssh_args: String::new(),
             user: String::new(),
             host: String::new(),
@@ -39,10 +39,12 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
         if args[i] == "" {continue;}
 
         let full_arg = (*args[i]).to_string().to_lowercase();
+        let is_arg = full_arg.starts_with("-");
         //make an option be split at space or equals
-        let mut option: Vec<&str> = full_arg.splitn(2, "=").collect();
+        let mut option: Vec<&str> = if is_arg {full_arg.splitn(2, "=").collect()}
+            else {vec!(&full_arg)};
         let mut next_arg = String::new();
-        if option.len() == 1 && i+1 < args.len() {
+        if option.len() == 1 && is_arg && i+1 < args.len() {
             next_arg = args[i+1].clone();
             option.push(&next_arg);
             //null arg
@@ -67,7 +69,16 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
                     if ssh_args.1 != "" {musht_args.ssh_port = ssh_args.1;}
                     add_option = false;
                 }
-                _ => {}
+                _ => {
+                    if arg.contains("@"){
+                        let userhost: Vec<&str> = arg.splitn(2, "@").collect();
+                        let hostport: Vec<&str> = userhost[1].splitn(2, ":").collect();
+                        musht_args.user = userhost[0].to_string();
+                        musht_args.host = hostport[0].to_string();
+                        if hostport.len() == 2 {musht_args.ssh_port = hostport[1].to_string()}
+                        add_option = false;
+                    }
+                }
             }
 
             if add_option {musht_args.args.push((*arg).to_string())};
