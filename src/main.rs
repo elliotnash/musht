@@ -11,11 +11,11 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let args = args::parse(args);
-
+    
     // build mosh command with args
     let mut command = Command::new("mosh");
     command.args(&args.args);
-    
+
     command.arg("--ssh").arg(args.get_ssh_args());
     if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
     command.arg(args.get_user_host());

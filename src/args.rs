@@ -28,6 +28,7 @@ impl Default for MushtArgs {
     }
 }
 
+mod host;
 impl MushtArgs {
     pub fn get_ssh_args(self: &Self) -> String {
         if self.ssh_port == "" {
