@@ -10,7 +10,10 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    let args = args::parse(args);
+    // parse args
+    let mut args = args::parse(args);
+    // resolve srv records and
+    args.resolve_ports();
     
     // build mosh command with args
     let mut command = Command::new("mosh");
@@ -24,9 +27,9 @@ fn main() {
     dbg!(&command);
 
     // spawn mosh blocking
-    // println!("[starting mosh.]");
-    // if command.status().is_err(){
-    //     println!("failed to start mosh, is it installed?")
-    // }
+    println!("[starting mosh.]");
+    if command.status().is_err(){
+        println!("failed to start mosh, is it installed?")
+    }
 
 }

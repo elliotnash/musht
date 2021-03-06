@@ -7,5 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+trust-dns-resolver = "0.20"
+trust-dns-proto = "0.20"
 lazy_static = "1.4.0"
 regex = "1.4.3"
