@@ -10,6 +10,11 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
+    if args.len() == 1 {
+        help::print_help();
+        std::process::exit(1);
+    }
+
     // parse args
     let mut args = args::parse(args);
     // resolve srv records and

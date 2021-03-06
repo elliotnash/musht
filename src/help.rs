@@ -1,5 +1,5 @@
 pub fn print_help(){
-    println!(r#"Usage: musht [options] [--] [user@]host [command...]
+    println!(r#"Usage: musht [options] [--] [user@]host:[ssh-port] [command...]
     --client=PATH        mosh client on local machine
                             (default: "mosh-client")
     --server=COMMAND     mosh server on remote machine
