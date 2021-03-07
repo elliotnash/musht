@@ -5,4 +5,4 @@ function main() {
     cargo install --force --path $DIR
 }
 
-main()
+main

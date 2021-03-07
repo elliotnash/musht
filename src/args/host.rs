@@ -12,11 +12,19 @@ impl MushtArgs {
         match resolver.srv_lookup(format!("_ssh._tcp.{}.", self.host)){
             Ok(srv) => {
                 let response = srv.iter().next().unwrap();
-                self.host = response.target().to_string();
+
+                //remove trailing . if present
+                let mut target = response.target().to_string();
+                if target.ends_with(".") {
+                    target.pop();
+                }
+                self.host = target;
+
                 //only want to change ports if theyre empty to allow manually specifying ports
                 let port = response.port().to_string();
                 if self.mosh_port == "" {self.mosh_port = port.clone();}
                 if self.ssh_port == "" {self.ssh_port = port;}
+                
             },
             Err(_) => {}
         }
