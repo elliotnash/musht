@@ -62,3 +62,7 @@ ssh_port must be a single port, wheras mosh_ports should be a port range. mosh_p
 ## Uninstallation
 
 run `./uninstall.sh` from the git directory
+
+## License
+
+Musht is licensed under GPL-3.0, see [LICENSE](LICENSE)
