@@ -40,6 +40,6 @@ pub fn print_help(){
     --version            version and copyright information
 
 Please do not report musht bugs to the mosh team
-Musht home page: "https://github.com/"
+Musht home page: "https://github.com/elliotnash/musht"
 Mosh home page: https://mosh.org"#);
 }
