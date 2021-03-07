@@ -53,7 +53,11 @@ the install script edits your .bashrc or .zshrc, so if you would like complete c
 
 ## Dns Setup
 
-To take adventage of musht's dns resolving, you'll need to have a record like an a, aaaa, or cname pointing to your servers ip, and you'll also need a txt record with the same name with a value of ```{"ssh_port": "22", "mosh_ports": "60000:61000"}```, replacing the ports with the ports you want mosh to use. ssh_port must be a single port, wheras mosh_ports should be a port range. mosh_ports *can* be set to a single port, but it is highly discouraged as each mosh connection runs on a seperate port, and a single port would only allow one simultaneous connection
+To take adventage of musht's dns resolving, you'll need to have a record like an a, aaaa, or cname pointing to your servers ip, and you'll also need a txt record with the same name with a value like this, replacing the ports with the ports you want mosh to use.
+```json
+{"ssh_port": "22", "mosh_ports": "60000:61000"}
+```
+ssh_port must be a single port, wheras mosh_ports should be a port range. mosh_ports *can* be set to a single port, but it is highly discouraged as each mosh connection runs on a seperate port, and a single port would only allow one simultaneous connection
 
 ## Uninstallation
 
