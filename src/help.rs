@@ -43,3 +43,14 @@ Please do not report musht bugs to the mosh team
 Musht home page: "https://github.com/elliotnash/musht"
 Mosh home page: https://mosh.org"#);
 }
+
+pub fn print_version() {
+    println!(r#"musht 0.1.0
+Copyright 2021 Elliot Nash
+
+mosh 1.3.2 [build mosh-1.3.2]
+Copyright 2012 Keith Winstein <mosh-devel@mit.edu>
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law."#);
+}

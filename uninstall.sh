@@ -9,11 +9,11 @@ function main() {
 
     # bash
     local FILE="$HOME/.bashrc"
-    echo "$(grep -v "$LINE" $FILE)" >$FILE
+    echo "$(grep -v "$LINE" $FILE)" > $FILE
 
     # zsh
     local FILE="$HOME/.zshrc"
-    echo "$(grep -v "$LINE" $FILE)" >$FILE
+    echo "$(grep -v "$LINE" $FILE)" > $FILE
 
 }
 

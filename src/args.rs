@@ -1,5 +1,6 @@
 use lazy_static::lazy_static;
 use regex::Regex;
+use crate::help;
 
 lazy_static! {
     static ref ARG_REGEX: Regex = Regex::new(r#"[^\s"']+|"([^"]*)"|'([^']*)'"#).unwrap();
@@ -12,7 +13,8 @@ pub struct MushtArgs {
     pub ssh_args: String,
     pub user: String,
     pub host: String,
-    pub args: Vec<String>
+    pub args: Vec<String>,
+    pub handled: bool
 }
 
 impl Default for MushtArgs {
@@ -23,7 +25,8 @@ impl Default for MushtArgs {
             ssh_args: "ssh".to_string(),
             user: String::new(),
             host: String::new(),
-            args: Vec::new()
+            args: Vec::new(),
+            handled: false
         }
     }
 }
@@ -46,6 +49,7 @@ impl MushtArgs {
     }
 }
 
+//TODO catch bad arguments
 pub fn parse(mut args: Vec<String>) -> MushtArgs {
     // give a little wiggle room for expanding vec without relocation
     let mut musht_args = MushtArgs{args: Vec::with_capacity(args.len()+2), ..Default::default()};
@@ -85,6 +89,14 @@ pub fn parse(mut args: Vec<String>) -> MushtArgs {
                     musht_args.ssh_args = ssh_args.0;
                     if ssh_args.1 != "" {musht_args.ssh_port = ssh_args.1;}
                     add_option = false;
+                },
+                "-h" | "--h" | "-help" | "--help" => {
+                    help::print_help();
+                    musht_args.handled = true;
+                },
+                "-v" | "--v" | "-version" | "--version" => {
+                    help::print_version();
+                    musht_args.handled = true;
                 }
                 _ => {
                     if add_option && i>=1 && !args[i].starts_with("-") && 

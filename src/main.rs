@@ -6,8 +6,6 @@ use std::process::Command;
 
 fn main() {
 
-    println!("[starting musht.]");
-
     let args: Vec<String> = env::args().collect();
 
     if args.len() == 1 {
@@ -17,6 +15,12 @@ fn main() {
 
     // parse args
     let mut args = args::parse(args);
+
+    //if already handled (help or version) exit
+    if args.handled {
+        std::process::exit(0);
+    }
+
     // resolve srv records and
     args.resolve_ports();
     
