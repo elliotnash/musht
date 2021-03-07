@@ -1,4 +1,5 @@
 use std::process::Command;
+use std::fs;
 
 fn main() {
 
@@ -30,23 +31,28 @@ fn main() {
 }
 
 fn print_hosts(home: String, prefix: &str, comp_word: &str){
-    //get raw output of host command
-    let mut get_hosts = Command::new("awk");
-    get_hosts.arg("-F").arg("[ ,:]")
-        .arg(r#"/^[0-9a-zA-Z]/{sub(/[/,"",$1); sub(/]/,"",$1); print $1}"#)
-        .arg(format!("{}/.ssh/known_hosts", home));
-    let output = get_hosts.output().expect("failed to execute process");
 
-    //process data 
-    let hosts = String::from_utf8_lossy(&output.stdout);
-    let mut hosts: Vec<&str> = hosts.split("\n").collect();
+    //process hosts
+    let mut hosts = get_hosts();
     hosts.sort_unstable();
     hosts.dedup();
-
 
     for host in hosts {
        if host.starts_with(&comp_word) {
            println!("{}{}", &prefix, &host);
        }
     }
+}
+
+fn get_hosts() -> Vec<String> {
+
+    // read ssh known_hosts file
+    let contents = fs::read_to_string("/home/elliot/.ssh/known_hosts")
+        .expect("Something went wrong reading the file");
+    let hosts: Vec<String> = contents.lines().map(|x| {
+        x.split_whitespace().next().unwrap().split(":").next().unwrap().replace(&['[', ']'][..], "") 
+    }).collect();
+
+    hosts
+
 }
