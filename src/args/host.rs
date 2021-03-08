@@ -16,7 +16,7 @@ impl MushtArgs {
         let resolver = Resolver::new(ResolverConfig::default(), ResolverOpts::default()).unwrap();
 
         // get txt record
-        match resolver.txt_lookup("i5.server.elliotnash.org."){
+        match resolver.txt_lookup(format!("{}.", self.host)) {
             Ok(srv) => {
                 let data = srv.iter().next().unwrap().to_string();
                 let json_result = serde_json::from_str(&data);
