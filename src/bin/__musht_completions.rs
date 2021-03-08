@@ -47,12 +47,17 @@ fn print_hosts(home: String, prefix: &str, comp_word: &str){
 fn get_hosts() -> Vec<String> {
 
     // read ssh known_hosts file
-    let contents = fs::read_to_string("/home/elliot/.ssh/known_hosts")
-        .expect("Something went wrong reading the file");
-    let hosts: Vec<String> = contents.lines().map(|x| {
-        x.split_whitespace().next().unwrap().split(":").next().unwrap().replace(&['[', ']'][..], "") 
-    }).collect();
-
-    hosts
+    match fs::read_to_string("/home/elliot/.ssh/known_hosts"){
+        Ok(contents) => {
+            let hosts: Vec<String> = contents.lines().map(|x| {
+                x.split_whitespace().next().unwrap().split(":").next().unwrap().replace(&['[', ']'][..], "") 
+            }).collect();
+        
+            hosts
+        },
+        Err(_) => {
+            vec!()
+        }
+    }
 
 }
