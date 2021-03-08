@@ -17,6 +17,8 @@ Its main goal is to provide support for loading port information from dns record
 
 - fallback to ssh if server doesn't have/can't start mosh
 
+- if tmux is installed and configured, automatically enable support for scrolling / history
+
 ## Installation
 
 At this time, no prebuilt binaries are published, so you'll need to compile them yourself.
