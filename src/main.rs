@@ -1,43 +1,32 @@
 mod help;
 mod args;
+mod parser;
 
 use std::env;
 use std::process::Command;
 
 fn main() {
 
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() == 1 {
-        help::print_help();
-        std::process::exit(1);
-    }
-
-    // parse args
-    let mut args = args::parse(args);
-
-    //if already handled (help or version) exit
-    if args.handled {
-        std::process::exit(0);
-    }
+    let args = parser::get_args();
 
     // resolve srv records and
-    args.resolve_ports();
+    // args.resolve_ports();
     
     // build mosh command with args
-    let mut command = Command::new("mosh");
-    command.args(&args.args);
+    // let mut command = Command::new("mosh");
+    // command.args(&args.args);
 
-    command.arg("--ssh").arg(args.get_ssh_args());
-    if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
-    command.arg(args.get_user_host());
+    // command.arg("--ssh").arg(args.get_ssh_args());
+    // if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
+    // command.arg(args.get_user_host());
 
-    //dbg!(&command);
+    // dbg!(args);
+    // dbg!(&command);
 
     // spawn mosh blocking
-    println!("[starting mosh.]");
-    if command.status().is_err(){
-        println!("failed to start mosh, is it installed?");
-    }
+    // println!("[starting mosh.]");
+    // if command.status().is_err(){
+    //     println!("failed to start mosh, is it installed?");
+    // }
 
 }

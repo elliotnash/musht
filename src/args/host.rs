@@ -31,7 +31,9 @@ impl MushtArgs {
                 if self.ssh_port == "" {self.ssh_port = json.ssh_port;}
                 
             },
-            Err(_) => {}
+            Err(err) => {
+                dbg!(format!("{}.", self.host));
+            }
         }
 
         self
