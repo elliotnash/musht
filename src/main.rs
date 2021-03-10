@@ -1,5 +1,6 @@
 mod help;
 mod args;
+mod parser;
 
 use std::env;
 use std::process::Command;
@@ -7,6 +8,8 @@ use std::process::Command;
 fn main() {
 
     let args = args::get_app().get_matches();
+
+    parser::parse(&args);
 
     // resolve srv records and
     // args.resolve_ports();
