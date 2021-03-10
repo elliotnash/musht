@@ -12,23 +12,31 @@ fn main() {
 
     let musht_args = parser::parse(&matches);
 
-    println!("{}", musht_args.address.to_string());
-
     // build mosh command with args
-    // let mut command = Command::new("mosh")
-    //     .arg(musht_args.address.to_string());
+    let mut command = Command::new(&musht_args.mosh);
+    command.arg(&musht_args.address.to_string())
+        .arg("--client").arg(&musht_args.client)
+        .arg("--server").arg(&musht_args.server)
+        .arg("--predict").arg(&musht_args.predict)
+        .arg("--family").arg(&musht_args.family)
+        .arg("--ssh").arg(&musht_args.get_ssh_args())
+        .arg("--bind-server").arg(&musht_args.bind_server)
+        .arg("--experimental-remote-ip").arg(&musht_args.experimental_remote_ip);
 
-    // command.arg("--ssh").arg(args.get_ssh_args());
-    // if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
-    // command.arg(args.get_user_host());
+    // add port arg
+    if let Some(port) = &musht_args.address.mosh_port {command.arg("--port").arg(port);};
 
-    // dbg!(args);
-    // dbg!(&command);
+    // add flags
+    if (&musht_args).predict_overwrite {command.arg("--predict-overwrite");};
+    if (&musht_args).local {command.arg("--local");};
+    if (&musht_args).no_init {command.arg("--no-init");};
+    if (&musht_args).no_ssh_pty {command.arg("--no-ssh-pty");};
 
-    // //spawn mosh blocking
-    // println!("[starting mosh.]");
-    // if command.status().is_err(){
-    //     println!("failed to start mosh, is it installed?");
-    // }
+    
+    //spawn mosh blocking
+    println!("[starting mosh.]");
+    if command.status().is_err(){
+        println!("failed to start mosh, is it installed?");
+    }
 
 }

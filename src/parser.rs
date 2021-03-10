@@ -34,7 +34,7 @@ impl Default for MushtArgs {
             
             address: MushtAddress::default(),
 
-            ssh: String::new(),
+            ssh: "ssh".to_string(),
         
             mosh: "mosh".to_string(),
             client: "mosh-client".to_string(),
@@ -48,6 +48,16 @@ impl Default for MushtArgs {
             local: false,
             experimental_remote_ip: "proxy".to_string()
 
+        }
+    }
+}
+
+impl MushtArgs {
+    pub fn get_ssh_args(&self) -> String {
+        if let Some(ssh_port) = self.address.ssh_port.clone() {
+            format!("{} -p {}", self.ssh, ssh_port)
+        } else {
+            self.ssh.clone()
         }
     }
 }
@@ -128,14 +138,14 @@ pub fn parse(matches: &ArgMatches) -> MushtArgs {
     if let Some(client) = matches.value_of("CLIENT") {musht_args.client = client.to_string();};
     if let Some(server) = matches.value_of("SERVER") {musht_args.server = server.to_string();};
     if let Some(predict) = matches.value_of("PREDICT") {musht_args.predict = predict.to_string();};
-    musht_args.predict_overwrite = matches.is_present("OVERWRITE");
     if let Some(family) = matches.value_of("FAMILY") {musht_args.family = family.to_string();};
     if let Some(port) = matches.value_of("PORT") {musht_args.address.mosh_port = Some(port.to_string());};
     if let Some(ssh_port) = matches.value_of("SSH PORT") {musht_args.address.ssh_port = Some(ssh_port.to_string());};
     if let Some(bind_server) = matches.value_of("PREDICT") {musht_args.bind_server = bind_server.to_string();};
-    musht_args.local = matches.is_present("LOCAL");
     if let Some(experimental_remote_ip) = matches.value_of("EXPERIMENTAL REMOTE IP") 
         {musht_args.experimental_remote_ip = experimental_remote_ip.to_string();};
+    musht_args.predict_overwrite = matches.is_present("OVERWRITE");
+    musht_args.local = matches.is_present("LOCAL");
     musht_args.no_init = matches.is_present("NO INIT");
     musht_args.no_ssh_pty = matches.is_present("NO SSH PTY");
 
