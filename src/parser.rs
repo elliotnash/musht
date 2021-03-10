@@ -50,7 +50,7 @@ impl Default for MushtArgs {
 pub struct MushtAddress{
     user: Option<String>,
     host: String,
-    port: Option<String>,
+    mosh_port: Option<String>,
     ssh_port: Option<String>,
 }
 
@@ -59,7 +59,7 @@ impl Default for MushtAddress {
         MushtAddress{
             user: None,
             host: String::new(),
-            port: None,
+            mosh_port: None,
             ssh_port: None
         }
     }
@@ -91,9 +91,12 @@ pub fn parse(app: &ArgMatches) {
 
     let mut musht_args = MushtArgs::default();
 
-    //host::resolve(app.value_of("HOST").unwrap().to_string());
+    // resolve address and add to musht_args
+    let mut musht_address = MushtAddress::from_str(app.value_of("HOST").unwrap().to_string());
+    host::resolve(&mut musht_address);
 
-    let addr = MushtAddress::from_str(app.value_of("HOST").unwrap().to_string());
-    dbg!(addr);
+    musht_args.address = musht_address;
+
+    dbg!(musht_args);
 
 }

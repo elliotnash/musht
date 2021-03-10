@@ -2,6 +2,7 @@ mod help;
 mod args;
 mod parser;
 
+//TODO User clap_generate for proper tab complete
 use std::env;
 use std::process::Command;
 
