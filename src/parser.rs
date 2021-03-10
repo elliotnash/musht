@@ -2,14 +2,6 @@ use clap::ArgMatches;
 mod host;
 
 #[derive(Debug)]
-pub struct MushtAddress{
-    user: Option<String>,
-    host: String,
-    port: String,
-    ssh_port: String,
-}
-
-#[derive(Debug)]
 pub struct MushtArgs{
 
     address: MushtAddress,
@@ -28,17 +20,6 @@ pub struct MushtArgs{
     local: bool,
     experimental_remote_ip: String
 
-}
-
-impl Default for MushtAddress {
-    fn default() -> Self {
-        MushtAddress{
-            user: None,
-            host: String::new(),
-            port: "60000:61000".to_string(),
-            ssh_port: "22".to_string()
-        }
-    }
 }
 
 impl Default for MushtArgs {
@@ -65,10 +46,54 @@ impl Default for MushtArgs {
     }
 }
 
+#[derive(Debug)]
+pub struct MushtAddress{
+    user: Option<String>,
+    host: String,
+    port: Option<String>,
+    ssh_port: Option<String>,
+}
+
+impl Default for MushtAddress {
+    fn default() -> Self {
+        MushtAddress{
+            user: None,
+            host: String::new(),
+            port: None,
+            ssh_port: None
+        }
+    }
+}
+
+impl MushtAddress {
+    pub fn from_str(raw_host: String) -> Self {
+        let mut musht_address = MushtAddress::default();
+        
+        // parse user
+        let host_port = if raw_host.contains("@") {
+            let mut split = raw_host.splitn(2, "@");
+            musht_address.user = Some(split.next().unwrap().to_string());
+            split.next().unwrap().to_string()
+        } else {raw_host};
+
+        // parse port and host
+        if host_port.contains(":") {
+            let mut split = host_port.splitn(2, ":");
+            musht_address.host = split.next().unwrap().to_string();
+            musht_address.ssh_port = Some(split.next().unwrap().to_string());
+        } else {musht_address.host = host_port;}
+
+        musht_address
+    }
+}
+
 pub fn parse(app: &ArgMatches) {
 
     let mut musht_args = MushtArgs::default();
 
-    host::resolve(app.value_of("HOST").unwrap().to_string());
+    //host::resolve(app.value_of("HOST").unwrap().to_string());
+
+    let addr = MushtAddress::from_str(app.value_of("HOST").unwrap().to_string());
+    dbg!(addr);
 
 }
