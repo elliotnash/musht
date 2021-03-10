@@ -1,4 +1,3 @@
-use std::process::Command;
 use std::fs;
 
 fn main() {
@@ -33,7 +32,7 @@ fn main() {
 fn print_hosts(home: String, prefix: &str, comp_word: &str){
 
     //process hosts
-    let mut hosts = get_hosts();
+    let mut hosts = get_hosts(home);
     hosts.sort_unstable();
     hosts.dedup();
 
@@ -44,10 +43,10 @@ fn print_hosts(home: String, prefix: &str, comp_word: &str){
     }
 }
 
-fn get_hosts() -> Vec<String> {
+fn get_hosts(home: String) -> Vec<String> {
 
     // read ssh known_hosts file
-    match fs::read_to_string("/home/elliot/.ssh/known_hosts"){
+    match fs::read_to_string(format!("{}/.ssh/known_hosts", home)){
         Ok(contents) => {
             let hosts: Vec<String> = contents.lines().map(|x| {
                 x.split_whitespace().next().unwrap().split(":").next().unwrap().replace(&['[', ']'][..], "") 
