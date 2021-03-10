@@ -8,16 +8,15 @@ use std::process::Command;
 
 fn main() {
 
-    let args = args::get_app().get_matches();
+    let matches = args::get_app().get_matches();
 
-    parser::parse(&args);
+    let musht_args = parser::parse(&matches);
 
-    // resolve srv records and
-    // args.resolve_ports();
-    
+    println!("{}", musht_args.address.to_string());
+
     // build mosh command with args
-    // let mut command = Command::new("mosh");
-    // command.args(&args.args);
+    // let mut command = Command::new("mosh")
+    //     .arg(musht_args.address.to_string());
 
     // command.arg("--ssh").arg(args.get_ssh_args());
     // if args.mosh_port != "" {command.arg("-p").arg(&args.mosh_port);}
@@ -26,7 +25,7 @@ fn main() {
     // dbg!(args);
     // dbg!(&command);
 
-    // spawn mosh blocking
+    // //spawn mosh blocking
     // println!("[starting mosh.]");
     // if command.status().is_err(){
     //     println!("failed to start mosh, is it installed?");

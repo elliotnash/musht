@@ -10,21 +10,21 @@ lazy_static! {
 #[derive(Debug)]
 pub struct MushtArgs{
 
-    address: MushtAddress,
+    pub address: MushtAddress,
 
-    ssh: String,
+    pub ssh: String,
 
-    mosh: String,
-    client: String,
-    server: String,
-    predict: String,
-    predict_overwrite: bool,
-    family: String,
-    bind_server: String,
-    no_ssh_pty: bool,
-    no_init: bool,
-    local: bool,
-    experimental_remote_ip: String
+    pub mosh: String,
+    pub client: String,
+    pub server: String,
+    pub predict: String,
+    pub predict_overwrite: bool,
+    pub family: String,
+    pub bind_server: String,
+    pub no_ssh_pty: bool,
+    pub no_init: bool,
+    pub local: bool,
+    pub experimental_remote_ip: String
 
 }
 
@@ -54,10 +54,10 @@ impl Default for MushtArgs {
 
 #[derive(Debug)]
 pub struct MushtAddress{
-    user: Option<String>,
-    host: String,
-    mosh_port: Option<String>,
-    ssh_port: Option<String>,
+    pub user: Option<String>,
+    pub host: String,
+    pub mosh_port: Option<String>,
+    pub ssh_port: Option<String>,
 }
 
 impl Default for MushtAddress {
@@ -72,7 +72,16 @@ impl Default for MushtAddress {
 }
 
 impl MushtAddress {
-    pub fn from_str(raw_host: String) -> Self {
+
+    pub fn to_string(&self) -> String {
+        if let Some(user) = &self.user {
+            format!("{}@{}", user, self.host)
+        } else {
+            self.host.clone()
+        }
+    }
+
+    pub fn from_string(raw_host: String) -> Self {
         let mut musht_address = MushtAddress::default();
         
         // parse user
@@ -99,7 +108,7 @@ pub fn parse(matches: &ArgMatches) -> MushtArgs {
 
     // resolve address and add to musht_args. Scoped because I kept typing musht_address ::)))))))))
     {
-        let mut musht_address = MushtAddress::from_str(matches.value_of("HOST").unwrap().to_string());
+        let mut musht_address = MushtAddress::from_string(matches.value_of("HOST").unwrap().to_string());
         host::resolve(&mut musht_address);
         musht_args.address = musht_address;
     }
