@@ -1,12 +1,18 @@
 use clap::ArgMatches;
+mod host;
 
 #[derive(Debug)]
-pub struct MushtArgs{
-
+pub struct MushtAddress{
     user: Option<String>,
     host: String,
     port: String,
     ssh_port: String,
+}
+
+#[derive(Debug)]
+pub struct MushtArgs{
+
+    address: MushtAddress,
 
     ssh: String,
 
@@ -24,15 +30,23 @@ pub struct MushtArgs{
 
 }
 
-impl Default for MushtArgs {
+impl Default for MushtAddress {
     fn default() -> Self {
-        MushtArgs{
-
+        MushtAddress{
             user: None,
             host: String::new(),
             port: "60000:61000".to_string(),
-            ssh_port: "22".to_string(),
-        
+            ssh_port: "22".to_string()
+        }
+    }
+}
+
+impl Default for MushtArgs {
+    fn default() -> Self {
+        MushtArgs{
+            
+            address: MushtAddress::default(),
+
             ssh: String::new(),
         
             mosh: "mosh".to_string(),
@@ -55,6 +69,6 @@ pub fn parse(app: &ArgMatches) {
 
     let mut musht_args = MushtArgs::default();
 
-    let raw_host = app.value_of("HOST").unwrap();
+    host::resolve(app.value_of("HOST").unwrap().to_string());
 
 }
