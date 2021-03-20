@@ -1,6 +1,6 @@
 [package]
 name = "musht"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Elliot Nash <elliotnash@gmail.com>"]
 description = "a mosh client wrapper written in rust with support for domain port records"
 homepage = "https://github.com/elliotnash/musht"
