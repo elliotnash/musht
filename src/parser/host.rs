@@ -6,10 +6,12 @@ use super::MushtAddress;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TxtData {
-    ssh_port: String,
-    mosh_ports: String
+    ssh_port: Option<String>,
+    mosh_ports: Option<String>,
+    server: Option<String>
 }
 
+// TODO add documentation about mosh-server option to readme
 pub fn resolve(musht_address: &mut MushtAddress) -> &mut MushtAddress {
 
     // Construct a new Resolver with default configuration options
@@ -26,9 +28,10 @@ pub fn resolve(musht_address: &mut MushtAddress) -> &mut MushtAddress {
                 return musht_address;
             };
 
-            //only want to change ports if theyre empty to allow manually specifying ports
-            musht_address.mosh_port = Some(json.mosh_ports);
-            musht_address.ssh_port = Some(json.ssh_port);
+            //don't overwrite manually specified stuff
+            if json.mosh_ports.is_some() {musht_address.mosh_port = json.mosh_ports;};
+            if json.ssh_port.is_some() {musht_address.ssh_port = json.ssh_port;};
+            if json.server.is_some() {musht_address.server = json.server;};
             
         },
         Err(_) => {}

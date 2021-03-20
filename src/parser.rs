@@ -7,6 +7,7 @@ lazy_static! {
     static ref ARG_REGEX: Regex = Regex::new(r#"[^\s"']+|"([^"]*)"|'([^']*)'"#).unwrap();
 }
 
+//TODO make these options
 #[derive(Debug)]
 pub struct MushtArgs{
 
@@ -16,7 +17,6 @@ pub struct MushtArgs{
 
     pub mosh: String,
     pub client: String,
-    pub server: String,
     pub predict: String,
     pub predict_overwrite: bool,
     pub family: String,
@@ -38,7 +38,6 @@ impl Default for MushtArgs {
         
             mosh: "mosh".to_string(),
             client: "mosh-client".to_string(),
-            server: "mosh-server".to_string(),
             predict: "adaptive".to_string(),
             predict_overwrite: false,
             family: "prefer-inet".to_string(),
@@ -68,6 +67,7 @@ pub struct MushtAddress{
     pub host: String,
     pub mosh_port: Option<String>,
     pub ssh_port: Option<String>,
+    pub server: Option<String>
 }
 
 impl Default for MushtAddress {
@@ -76,7 +76,8 @@ impl Default for MushtAddress {
             user: None,
             host: String::new(),
             mosh_port: None,
-            ssh_port: None
+            ssh_port: None,
+            server: None
         }
     }
 }
@@ -117,6 +118,7 @@ pub fn parse(matches: &ArgMatches) -> MushtArgs {
     let mut musht_args = MushtArgs::default();
 
     // resolve address and add to musht_args. Scoped because I kept typing musht_address ::)))))))))
+    // TODO should probably refactor host::resolve to be a trait of address
     {
         let mut musht_address = MushtAddress::from_string(matches.value_of("HOST").unwrap().to_string());
         host::resolve(&mut musht_address);
@@ -136,7 +138,7 @@ pub fn parse(matches: &ArgMatches) -> MushtArgs {
     // parse other args
     if let Some(mosh) = matches.value_of("MOSH") {musht_args.mosh = mosh.to_string();};
     if let Some(client) = matches.value_of("CLIENT") {musht_args.client = client.to_string();};
-    if let Some(server) = matches.value_of("SERVER") {musht_args.server = server.to_string();};
+    if let Some(server) = matches.value_of("SERVER") {musht_args.address.server = Some(server.to_string());};
     if let Some(predict) = matches.value_of("PREDICT") {musht_args.predict = predict.to_string();};
     if let Some(family) = matches.value_of("FAMILY") {musht_args.family = family.to_string();};
     if let Some(port) = matches.value_of("PORT") {musht_args.address.mosh_port = Some(port.to_string());};

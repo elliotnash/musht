@@ -14,15 +14,15 @@ fn main() {
     let mut command = Command::new(&musht_args.mosh);
     command.arg(&musht_args.address.to_string())
         .arg("--client").arg(&musht_args.client)
-        .arg("--server").arg(&musht_args.server)
         .arg("--predict").arg(&musht_args.predict)
         .arg("--family").arg(&musht_args.family)
         .arg("--ssh").arg(&musht_args.get_ssh_args())
         .arg("--bind-server").arg(&musht_args.bind_server)
         .arg("--experimental-remote-ip").arg(&musht_args.experimental_remote_ip);
 
-    // add port arg
+    // add optional args
     if let Some(port) = &musht_args.address.mosh_port {command.arg("--port").arg(port);};
+    if let Some(server) = &musht_args.address.server {command.arg("--server").arg(server);};
 
     // add flags
     if (&musht_args).predict_overwrite {command.arg("--predict-overwrite");};
